@@ -1,0 +1,48 @@
+@import "tailwindcss";
+
+body {
+  background-color: #fff !important;
+}
+
+.swiper-pagination-bullet {
+  background-color: #73777e !important; /* Default dot color */
+  opacity: 0.6;
+}
+
+.swiper-pagination-bullet-active {
+  background-color: #ea580c !important; /* Active dot color */
+  opacity: 1;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  animation: marquee 20s linear infinite !important;
+  animation-play-state: running !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.custom-scrollbar {
+  -ms-overflow-style: none; /* IE & Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  color: #3f3f3f !important;
+  transition: all 0.3s ease-in-out;
+  background-color: transparent !important;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  color: #ea580c !important;
+}

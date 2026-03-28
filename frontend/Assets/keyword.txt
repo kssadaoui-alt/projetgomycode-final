@@ -1,0 +1,91 @@
+Stock Status Keywords:
+
+"Out of Stock"
+
+"In Stock"
+
+"Low Stock"
+
+"Backorder"
+
+"Pre-Order"
+
+"Discontinued"
+
+"Limited Stock"
+
+"Available Soon"
+
+Discount/Sale Keywords:
+
+"5% OFF"
+
+"10% OFF"
+
+"15% OFF"
+
+"20% OFF"
+
+"25% OFF"
+
+"30% OFF"
+
+"Clearance Sale"
+
+"Flash Sale"
+
+"Limited Time Offer"
+
+"Special Offer"
+
+"Deal of the Day"
+
+"Bundle Deal"
+
+"BOGO" (Buy One Get One)
+
+Shipping Keywords:
+
+"Free Shipping"
+
+"Express Delivery"
+
+"Same Day Delivery"
+
+"Free Returns"
+
+"2-Day Shipping"
+
+New Arrival Keywords:
+
+"New"
+
+"Just Launched"
+
+"New Arrival"
+
+"Featured"
+
+Seasonal Keywords:
+
+"Summer Sale"
+
+"Winter Special"
+
+"Holiday Deal"
+
+"Black Friday"
+
+"Cyber Monday"
+
+Recommendation Keywords:
+
+"Best Seller"
+
+"Trending Now"
+
+"Staff Pick"
+
+"Customer Favorite"
+
+"Top Rated"
