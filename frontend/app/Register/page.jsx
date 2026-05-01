@@ -3,12 +3,12 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useState } from "react";
 import Nav from "@/Components/Nav/Nav";
 import Link from "next/link";
-import React from "react";
+
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
 
 const Page = () => {
-  // State to manage form inputs
+  // ✅ State
   const [formData, setFormData] = useState({
     uName: "",
     uEmail: "",
@@ -19,215 +19,202 @@ const Page = () => {
     uType: "User",
   });
 
-  // Regex Validations
+  // ✅ Regex
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,}$/;
+  const passRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[\W_]).{8,20}$/;
 
-  console.log(formData);
-
-  // Input Handler
+  // ✅ Handle input
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Submit Handler
+  // ✅ Submit
   const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Check is the email is valid
-    if (formData.uEmail.trim().match(emailRegex) === null) {
+    console.log("Sending:", formData);
+
+// ✅ Email validation
+    if (!formData.uEmail.trim().match(emailRegex)) {
       toast.error("Email is not valid");
+      return;
     }
 
-    // Check is the password is valid
-    if (formData.uPass.trim().match(passRegex) === null) {
+// ✅ Password validation
+    if (!formData.uPass.trim().match(passRegex)) {
       toast.error(
-        "Password must be 8-20 chars long, include uppercase, lowercase, number, and special character."
+        "Password must be 8-20 chars, include uppercase, lowercase, number, and special character."
       );
-    } else if (formData.uPass !== formData.confirmPassword) {
+      return;
+    }
+
+// ✅ Confirm password
+    if (formData.uPass !== formData.confirmPassword) {
       toast.error("Passwords Not Match");
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:8000/api/register",
-          formData
-        );
-        console.log(response.data);
-        if (response.data.error === "User already exists") {
-          toast.error("User already exists!");
-        } else if (response.data.message === "User registered successfully") {
-          window.location.href = "/Login";
-        }
-      } catch (err) {
-        console.log(err);
-        toast.error("Something went wrong. Please try again.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8000/api/users/register",
+        formData
+      );
+
+      console.log("Response:", response.data);
+
+      if (response.data.error === "User already exists") {
+        toast.error("User already exists!");
+      } else if (response.data.message === "User registered successfully") {
+        toast.success("Account created successfully 🎉");
+        window.location.href = "/Login";
+      } else {
+        toast.error(response.data.message || "Unexpected response");
       }
+    } catch (err) {
+      console.log("Error:", err.response);
+
+      toast.error(
+        err.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
     }
   };
 
-  // State to manage password visibility
+  // ✅ Show password
   const [showPassword, setShowPassword] = useState(false);
-
-  // Function to toggle password visibility
   const togglePassword = () => setShowPassword((prev) => !prev);
+
   return (
     <div>
       <Nav />
       <ToastContainer theme="dark" position="top-right" />
-      <div className=" flex items-center justify-center bg-gray-50 px-4">
-        <div className="max-w-2xl w-full bg-white  rounded-lg shadow-md mt-10 mb-12 p-8">
+
+      <div className="flex items-center justify-center bg-gray-50 px-4">
+        <div className="max-w-2xl w-full bg-white rounded-lg shadow-md mt-10 mb-12 p-8">
           <h2 className="text-3xl font-semibold text-center mb-6">
             Register <span className="text-orange-500">Now</span>
           </h2>
+
           <form className="space-y-5" onSubmit={onSubmit}>
-            {/* Name Input */}
+            {/* Name */}
             <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Your Name <span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Your Name *
               </label>
               <input
                 type="text"
-                id="name"
-                required
-                onChange={onChangeHandler}
-                value={formData.uName}
                 name="uName"
-                placeholder="Enter your name"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400"
+                required
+                value={formData.uName}
+                onChange={onChangeHandler}
+                className="w-full px-4 py-2 border rounded-md"
               />
             </div>
-            {/* Email Input */}
+
+            {/* Email */}
             <div>
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Email Address<span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Email Address *
               </label>
               <input
                 type="email"
-                id="email"
-                required
-                onChange={onChangeHandler}
-                value={formData.uEmail}
                 name="uEmail"
-                placeholder="Enter your email"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400"
+                required
+                value={formData.uEmail}
+                onChange={onChangeHandler}
+                className="w-full px-4 py-2 border rounded-md"
               />
             </div>
-            {/* Address Input */}
+
+            {/* Address */}
             <div>
-              <label
-                htmlFor="address"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Your Address<span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Address *
               </label>
               <input
                 type="text"
-                id="address"
-                required
-                onChange={onChangeHandler}
-                value={formData.uAddress}
                 name="uAddress"
-                placeholder="Enter your address"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400"
+                required
+                value={formData.uAddress}
+                onChange={onChangeHandler}
+                className="w-full px-4 py-2 border rounded-md"
               />
             </div>
-            {/* Phone Input */}
+
+            {/* Phone */}
             <div>
-              <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Your Phone<span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Phone *
               </label>
               <input
-                type="number"
-                id="phone"
-                required
-                onChange={onChangeHandler}
-                value={formData.uPhone}
+                type="text"
                 name="uPhone"
-                placeholder="Enter your phone"
-                onInput={(e) => {
-                  if (e.target.value.length > 10) {
-                    e.target.value = e.target.value.slice(0, 10);
-                  }
-                }}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400"
+                required
+                value={formData.uPhone}
+                onChange={onChangeHandler}
+                maxLength={10}
+                className="w-full px-4 py-2 border rounded-md"
               />
             </div>
-            {/* Password Input */}
+
+            {/* Password */}
             <div className="relative">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Password<span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Password *
               </label>
               <input
                 type={showPassword ? "text" : "password"}
-                id="password"
                 name="uPass"
                 required
-                maxLength={12}
-                placeholder="Enter your password"
-                onChange={onChangeHandler}
                 value={formData.uPass}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400 pr-10"
+                onChange={onChangeHandler}
+                maxLength={20} // ✅ FIXED
+                className="w-full px-4 py-2 border rounded-md pr-10"
               />
-              {/* Eye Icon for Password Visibility */}
+
               <div
-                className="absolute top-9 right-3 cursor-pointer text-gray-500"
+                className="absolute top-9 right-3 cursor-pointer"
                 onClick={togglePassword}
               >
                 {showPassword ? (
-                  <AiOutlineEyeInvisible size={20} />
+                  <AiOutlineEyeInvisible />
                 ) : (
-                  <AiOutlineEye size={20} />
+                  <AiOutlineEye />
                 )}
               </div>
             </div>
-            {/* Confirm Password Input */}
+
+            {/* Confirm Password */}
             <div>
-              <label
-                htmlFor="cPassword"
-                className="block text-sm font-medium text-gray-700 mb-1"
-              >
-                Confirm Password<span className="text-red-600">*</span>
+              <label className="block text-sm font-medium mb-1">
+                Confirm Password *
               </label>
               <input
                 type="password"
-                maxLength={12}
-                required
-                id="cPassword"
-                onChange={onChangeHandler}
-                value={formData.confirmPassword}
                 name="confirmPassword"
-                placeholder="Confirm your password"
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-orange-400"
+                required
+                value={formData.confirmPassword}
+                onChange={onChangeHandler}
+                maxLength={20} // ✅ FIXED
+                className="w-full px-4 py-2 border rounded-md"
               />
             </div>
 
-            <div>
-              <button
-                type="submit"
-                className="w-full bg-orange-500 text-white py-2 cursor-pointer rounded-md hover:bg-orange-600 transition duration-300"
-              >
-                Register Now
-              </button>
-            </div>
+            {/* Button */}
+            <button
+              type="submit"
+              className="w-full bg-orange-500 text-white py-2 rounded-md hover:bg-orange-600"
+            >
+              Register Now
+            </button>
           </form>
 
-          <p className="text-sm text-center text-gray-600 mt-4">
-            Do Not have an account?{" "}
-            <Link href={"/Login"} className="text-orange-500 hover:underline">
-              Log In
+          <p className="text-sm text-center mt-4">
+            Already have an account?{" "}
+            <Link href="/Login" className="text-orange-500">
+              Login
             </Link>
           </p>
         </div>
